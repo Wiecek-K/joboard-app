@@ -1,5 +1,3 @@
-import { ReactNode } from 'react';
-import clsx from 'clsx';
 import Image from 'next/image';
 import { JobOfferT } from '@/lib/types';
 
