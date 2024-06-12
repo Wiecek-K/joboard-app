@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import tailwindcssSignals from 'tailwindcss-signals';
 
 const config: Config = {
    content: [
@@ -46,6 +47,6 @@ const config: Config = {
          },
       },
    },
-   plugins: [],
+   plugins: [tailwindcssSignals],
 };
 export default config;
