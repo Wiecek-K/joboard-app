@@ -18,8 +18,3 @@ export interface JobOfferI {
    updatedAt: string;
    image: string;
 }
-
-export interface searchParamsI {
-   jobTitle?: string;
-   seniority?: string[];
-}

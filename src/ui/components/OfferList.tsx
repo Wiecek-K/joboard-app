@@ -7,11 +7,10 @@ import { fetchAllOffers } from '@/lib/data';
 import { useState, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Search } from '@/assets/icons/Search';
-interface OfferListProps {
-   offersArray: JobOfferI[];
-}
 
-export const OfferList = ({ offersArray }: OfferListProps) => {
+interface OfferListProps {}
+
+export const OfferList = () => {
    const { data, error, isLoading } = useSWR<JobOfferI[]>('jobOffers', fetchAllOffers);
    const [wantedTitle, setWantedTitle] = useState('');
 
