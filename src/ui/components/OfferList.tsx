@@ -1,11 +1,13 @@
-import { JobOfferT } from '@/lib/types';
+import { JobOfferI } from '@/lib/types';
 import { OfferCard } from './OfferCard';
 
 interface OfferListProps {
-   data: JobOfferT[];
+   offersArray: JobOfferI[];
 }
 
-export const OfferList = ({ data }: OfferListProps) => {
+export const OfferList = ({ offersArray }: OfferListProps) => {
+   const data = [...offersArray];
+
    return (
       <div className="w-full bg-gray-lightest p-[16px] md:p-[40px]">
          <div className="mb-[16px]">

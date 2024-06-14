@@ -1,4 +1,4 @@
-export interface JobOfferT {
+export interface JobOfferI {
    _id: string;
    title: string;
    companyName: string;
@@ -17,4 +17,9 @@ export interface JobOfferT {
    createdAt: string;
    updatedAt: string;
    image: string;
+}
+
+export interface searchParamsI {
+   jobTitle?: string;
+   seniority?: string[];
 }
