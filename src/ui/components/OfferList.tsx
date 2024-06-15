@@ -7,20 +7,24 @@ import { fetchAllOffers } from '@/lib/data';
 import { useState, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Search } from '@/assets/icons/Search';
+import { Place } from '@/assets/icons/Place';
 
 interface OfferListProps {}
 
 export const OfferList = () => {
    const { data, error, isLoading } = useSWR<JobOfferI[]>('jobOffers', fetchAllOffers);
    const [wantedTitle, setWantedTitle] = useState('');
+   const [wantedLocation, setWantedLocation] = useState('');
 
    const titleSerchBarRef = useRef<HTMLDivElement>(null);
+   const locationSerchBarRef = useRef<HTMLDivElement>(null);
 
    const searchParams = useSearchParams();
    const pathname = usePathname();
    const { replace } = useRouter();
 
-   const titlePram = searchParams.get('title') || '';
+   const titleParam = searchParams.get('title') || '';
+   const locationParam = searchParams.get('location') || '';
 
    const handleTitleSearch = (term: string) => {
       const params = new URLSearchParams(searchParams);
@@ -30,7 +34,17 @@ export const OfferList = () => {
          params.delete('title');
       }
       replace(`${pathname}?${params.toString()}`);
-      setWantedTitle(term);
+      titleSerchBarRef.current?.blur();
+   };
+
+   const handleLoacationSearch = (term: string) => {
+      const params = new URLSearchParams(searchParams);
+      if (term) {
+         params.set('location', term);
+      } else {
+         params.delete('location');
+      }
+      replace(`${pathname}?${params.toString()}`);
       titleSerchBarRef.current?.blur();
    };
 
@@ -38,16 +52,21 @@ export const OfferList = () => {
    if (isLoading) return <div>Ładowanie...</div>;
    if (!data) throw new Error();
 
-   const filteredData = data.filter((offer) =>
-      offer.title.toLocaleLowerCase().includes(titlePram.toLowerCase()),
-   );
+   const filteredData = Array.from(
+      new Set([
+         ...data.filter((offer) => offer.city.toLowerCase().includes(locationParam.toLowerCase())),
+         ...data.filter((offer) =>
+            offer.country.toLowerCase().includes(locationParam.toLowerCase()),
+         ),
+      ]),
+   ).filter((offer) => offer.title.toLocaleLowerCase().includes(titleParam.toLowerCase()));
 
    return (
       <div className="w-full bg-gray-lightest p-[16px] md:p-[40px]">
          <div className="mb-[24px] flex w-full gap-[12px]">
             <div
                tabIndex={0}
-               className="focus-within:signal relative w-full"
+               className="relative w-full focus-within:signal"
                ref={titleSerchBarRef}
             >
                <input
@@ -59,7 +78,7 @@ export const OfferList = () => {
                      if (e.key === 'Enter') handleTitleSearch(wantedTitle);
                   }}
                ></input>
-               <div className="bottom signal:flex absolute z-10 mt-[2px]  w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox ">
+               <div className="bottom absolute z-10 mt-[2px] hidden  w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex ">
                   {wantedTitle &&
                      data
                         .filter((offer) =>
@@ -98,7 +117,75 @@ export const OfferList = () => {
                   <Search />
                </div>
             </div>
-            <div className="relative w-full"></div>
+            <div
+               tabIndex={0}
+               className="relative w-full focus-within:signal"
+               ref={locationSerchBarRef}
+            >
+               <input
+                  onChange={(e) => setWantedLocation(e.target.value)}
+                  value={wantedLocation}
+                  placeholder="Search location"
+                  className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px]  text-gray-dark shadow-checkbox"
+                  onKeyDown={(e) => {
+                     if (e.key === 'Enter') handleLoacationSearch(wantedLocation);
+                  }}
+               ></input>
+               <div className="bottom absolute z-10 mt-[2px] hidden  w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex ">
+                  {wantedLocation &&
+                     Array.from(
+                        new Set([
+                           ...data.filter((offer) =>
+                              offer.city.toLowerCase().includes(wantedLocation.toLowerCase()),
+                           ),
+                           ...data.filter((offer) =>
+                              offer.country.toLowerCase().includes(wantedLocation.toLowerCase()),
+                           ),
+                        ]),
+                     ).map((offer) => {
+                        const cityParts = offer.city.split(new RegExp(`(${wantedLocation})`, 'gi'));
+                        const countryParts = offer.country.split(
+                           new RegExp(`(${wantedLocation})`, 'gi'),
+                        );
+                        return (
+                           <div
+                              key={wantedLocation + offer._id}
+                              className="flex min-h-[30px] cursor-pointer items-center justify-between border-b border-gray-light px-[15px] py-[4px]"
+                              onClick={() => handleLoacationSearch(offer.city)}
+                           >
+                              <p className="max-w-[75%]t">
+                                 {cityParts.map((part, index) =>
+                                    part.toLowerCase() === wantedLocation.toLowerCase() ? (
+                                       <span key={index} className="font-bold">
+                                          {part}
+                                       </span>
+                                    ) : (
+                                       <span key={index}>{part}</span>
+                                    ),
+                                 )}
+                              </p>
+                              <p className="text-right text-regular12">
+                                 {countryParts.map((part, index) =>
+                                    part.toLowerCase() === wantedLocation.toLowerCase() ? (
+                                       <span key={index} className="font-bold">
+                                          {part}
+                                       </span>
+                                    ) : (
+                                       <span key={index}>{part}</span>
+                                    ),
+                                 )}
+                              </p>
+                           </div>
+                        );
+                     })}
+               </div>
+               <div
+                  className="absolute right-[10px] top-[50%] -translate-y-1/2 cursor-pointer"
+                  onClick={() => handleLoacationSearch(wantedLocation)}
+               >
+                  <Place />
+               </div>
+            </div>
          </div>
 
          <div className="mb-[16px]">
