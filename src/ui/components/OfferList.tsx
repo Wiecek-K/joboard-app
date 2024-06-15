@@ -37,7 +37,7 @@ export const OfferList = () => {
       titleSearchBarRef.current?.blur();
    };
 
-   const handleLoacationSearch = (term: string) => {
+   const handleLocationSearch = (term: string) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
          params.set('location', term);
@@ -128,7 +128,7 @@ export const OfferList = () => {
                   placeholder="Search location"
                   className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px]  text-gray-dark shadow-checkbox"
                   onKeyDown={(e) => {
-                     if (e.key === 'Enter') handleLoacationSearch(wantedLocation);
+                     if (e.key === 'Enter') handleLocationSearch(wantedLocation);
                   }}
                ></input>
                <div className="bottom absolute z-10 mt-[2px] hidden  w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex ">
@@ -151,7 +151,7 @@ export const OfferList = () => {
                            <div
                               key={wantedLocation + offer._id}
                               className="flex min-h-[30px] cursor-pointer items-center justify-between border-b border-gray-light px-[15px] py-[4px]"
-                              onClick={() => handleLoacationSearch(offer.city)}
+                              onClick={() => handleLocationSearch(offer.city)}
                            >
                               <p className="max-w-[75%]t">
                                  {cityParts.map((part, index) =>
@@ -181,7 +181,7 @@ export const OfferList = () => {
                </div>
                <div
                   className="absolute right-[10px] top-[50%] -translate-y-1/2 cursor-pointer"
-                  onClick={() => handleLoacationSearch(wantedLocation)}
+                  onClick={() => handleLocationSearch(wantedLocation)}
                >
                   <Place />
                </div>
