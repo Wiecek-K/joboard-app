@@ -16,8 +16,8 @@ export const OfferList = () => {
    const [wantedTitle, setWantedTitle] = useState('');
    const [wantedLocation, setWantedLocation] = useState('');
 
-   const titleSerchBarRef = useRef<HTMLDivElement>(null);
-   const locationSerchBarRef = useRef<HTMLDivElement>(null);
+   const titleSearchBarRef = useRef<HTMLDivElement>(null);
+   const locationSearchBarRef = useRef<HTMLDivElement>(null);
 
    const searchParams = useSearchParams();
    const pathname = usePathname();
@@ -34,7 +34,7 @@ export const OfferList = () => {
          params.delete('title');
       }
       replace(`${pathname}?${params.toString()}`);
-      titleSerchBarRef.current?.blur();
+      titleSearchBarRef.current?.blur();
    };
 
    const handleLoacationSearch = (term: string) => {
@@ -45,7 +45,7 @@ export const OfferList = () => {
          params.delete('location');
       }
       replace(`${pathname}?${params.toString()}`);
-      titleSerchBarRef.current?.blur();
+      locationSearchBarRef.current?.blur();
    };
 
    if (error) return <div>Wystąpił błąd</div>;
@@ -67,7 +67,7 @@ export const OfferList = () => {
             <div
                tabIndex={0}
                className="relative w-full focus-within:signal"
-               ref={titleSerchBarRef}
+               ref={titleSearchBarRef}
             >
                <input
                   onChange={(e) => setWantedTitle(e.target.value)}
@@ -120,7 +120,7 @@ export const OfferList = () => {
             <div
                tabIndex={0}
                className="relative w-full focus-within:signal"
-               ref={locationSerchBarRef}
+               ref={locationSearchBarRef}
             >
                <input
                   onChange={(e) => setWantedLocation(e.target.value)}
