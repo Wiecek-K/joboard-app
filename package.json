@@ -14,7 +14,8 @@
     "react": "^18",
     "react-dom": "^18",
     "swr": "^2.2.5",
-    "tailwindcss-signals": "^0.0.25"
+    "tailwindcss-signals": "^0.0.25",
+    "use-debounce": "^10.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",

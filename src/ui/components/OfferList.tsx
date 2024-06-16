@@ -8,6 +8,7 @@ import { useState, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Search } from '@/assets/icons/Search';
 import { Place } from '@/assets/icons/Place';
+import { useDebouncedCallback } from 'use-debounce';
 
 interface OfferListProps {}
 
@@ -26,7 +27,7 @@ export const OfferList = () => {
    const titleParam = searchParams.get('title') || '';
    const locationParam = searchParams.get('location') || '';
 
-   const handleTitleSearch = (term: string) => {
+   const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
          params.set('title', term);
@@ -35,9 +36,9 @@ export const OfferList = () => {
       }
       replace(`${pathname}?${params.toString()}`);
       titleSearchBarRef.current?.blur();
-   };
+   }, 350);
 
-   const handleLocationSearch = (term: string) => {
+   const handleLocationSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
          params.set('location', term);
@@ -46,7 +47,7 @@ export const OfferList = () => {
       }
       replace(`${pathname}?${params.toString()}`);
       locationSearchBarRef.current?.blur();
-   };
+   }, 350);
 
    if (error) return <div>Wystąpił błąd</div>;
    if (isLoading) return <div>Ładowanie...</div>;
@@ -70,7 +71,10 @@ export const OfferList = () => {
                ref={titleSearchBarRef}
             >
                <input
-                  onChange={(e) => setWantedTitle(e.target.value)}
+                  onChange={(e) => {
+                     setWantedTitle(e.target.value);
+                     handleTitleSearch(e.target.value);
+                  }}
                   value={wantedTitle}
                   placeholder="Search for"
                   className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px]  text-gray-dark shadow-checkbox"
@@ -123,7 +127,10 @@ export const OfferList = () => {
                ref={locationSearchBarRef}
             >
                <input
-                  onChange={(e) => setWantedLocation(e.target.value)}
+                  onChange={(e) => {
+                     setWantedLocation(e.target.value);
+                     handleLocationSearch(e.target.value);
+                  }}
                   value={wantedLocation}
                   placeholder="Search location"
                   className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px]  text-gray-dark shadow-checkbox"
