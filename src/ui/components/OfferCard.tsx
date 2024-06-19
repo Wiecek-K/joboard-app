@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import { JobOfferT } from '@/lib/types';
+import { JobOfferI } from '@/lib/types';
 
-interface OfferCardProps extends JobOfferT {}
+interface OfferCardProps extends JobOfferI {}
 
 export const OfferCard = ({
    title,
@@ -30,7 +30,7 @@ export const OfferCard = ({
 
    return (
       <>
-         <div className=" flex w-full flex-col rounded-[5px] border border-gray-light bg-white p-[24px] md:hidden">
+         <div className="flex w-full flex-col rounded-[5px] border border-gray-light bg-white p-[24px] md:hidden">
             <h3 className="mb-[16px] pr-[6px] text-semibold20 text-gray-darkest">{title}</h3>
             <div className="mb-[24px] flex">
                <Image
@@ -50,7 +50,7 @@ export const OfferCard = ({
                      </p>
                   </div>
                   <div className="flex">
-                     <p className="mr-[14px] border-r border-gray-light pr-[14px] ">{seniority}</p>
+                     <p className="mr-[14px] border-r border-gray-light pr-[14px]">{seniority}</p>
                      <p>{workLocation}</p>
                   </div>
                </div>

@@ -3,17 +3,16 @@
 import { JobOfferI } from '@/lib/types';
 import { OfferCard } from './OfferCard';
 import useSWR from 'swr';
-import { fetchAllOffers } from '@/lib/data';
+import { fetchAllOffers } from '@/lib/actions';
 import { useState, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Search } from '@/assets/icons/Search';
 import { Place } from '@/assets/icons/Place';
 import { useDebouncedCallback } from 'use-debounce';
 
-interface OfferListProps {}
+export const OfferList = ({}) => {
+   const { data, error, isLoading } = useSWR<JobOfferI[]>('/joboard/offers', fetchAllOffers);
 
-export const OfferList = () => {
-   const { data, error, isLoading } = useSWR<JobOfferI[]>('jobOffers', fetchAllOffers);
    const [wantedTitle, setWantedTitle] = useState('');
    const [wantedLocation, setWantedLocation] = useState('');
 
@@ -77,12 +76,12 @@ export const OfferList = () => {
                   }}
                   value={wantedTitle}
                   placeholder="Search for"
-                  className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px]  text-gray-dark shadow-checkbox"
+                  className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px] text-gray-dark shadow-checkbox"
                   onKeyDown={(e) => {
                      if (e.key === 'Enter') handleTitleSearch(wantedTitle);
                   }}
                ></input>
-               <div className="bottom absolute z-10 mt-[2px] hidden  w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex ">
+               <div className="bottom absolute z-10 mt-[2px] hidden w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex">
                   {wantedTitle &&
                      data
                         .filter((offer) =>
@@ -133,12 +132,12 @@ export const OfferList = () => {
                   }}
                   value={wantedLocation}
                   placeholder="Search location"
-                  className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px]  text-gray-dark shadow-checkbox"
+                  className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px] text-gray-dark shadow-checkbox"
                   onKeyDown={(e) => {
                      if (e.key === 'Enter') handleLocationSearch(wantedLocation);
                   }}
                ></input>
-               <div className="bottom absolute z-10 mt-[2px] hidden  w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex ">
+               <div className="bottom absolute z-10 mt-[2px] hidden w-full flex-col border border-b-0 border-gray-light bg-white text-regular14 shadow-checkbox signal:flex">
                   {wantedLocation &&
                      Array.from(
                         new Set([
