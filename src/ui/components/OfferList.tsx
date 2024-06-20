@@ -62,8 +62,8 @@ export const OfferList = ({}) => {
    ).filter((offer) => offer.title.toLocaleLowerCase().includes(titleParam.toLowerCase()));
 
    return (
-      <div className="w-full bg-gray-lightest p-[16px] md:p-[40px]">
-         <div className="mb-[24px] flex w-full gap-[12px]">
+      <div className="w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
+         <div className="mb-[24px] flex w-full flex-col gap-[12px] md:flex-row">
             <div
                tabIndex={0}
                className="relative w-full focus-within:signal"
@@ -197,7 +197,7 @@ export const OfferList = ({}) => {
          <div className="mb-[16px]">
             <p className="text-semibold16 text-gray-darkest">{filteredData.length} offers found</p>
          </div>
-         <div className="flex flex-col gap-[8px]">
+         <div className="ml-[-1px] flex flex-col gap-[8px]">
             {filteredData.map((offer) => (
                <OfferCard {...offer} key={offer._id} />
             ))}
