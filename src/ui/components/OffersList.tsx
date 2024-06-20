@@ -49,7 +49,52 @@ export const OfferList = ({}) => {
    }, 350);
 
    if (error) return <div>Wystąpił błąd</div>;
-   if (isLoading) return <div>Ładowanie...</div>;
+   if (isLoading)
+      return (
+         <div className="h-min-full w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
+            <div className="mb-[24px] flex w-full flex-col gap-[12px] md:flex-row">
+               <div
+                  tabIndex={0}
+                  className="relative w-full focus-within:signal"
+                  ref={titleSearchBarRef}
+               >
+                  <input
+                     disabled={true}
+                     value={wantedTitle}
+                     placeholder="Search for"
+                     className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px] text-gray-dark shadow-checkbox"
+                  ></input>
+                  <div
+                     className="absolute right-[10px] top-[50%] -translate-y-1/2 cursor-pointer"
+                     onClick={() => handleTitleSearch(wantedTitle)}
+                  >
+                     <Search />
+                  </div>
+               </div>
+               <div
+                  tabIndex={0}
+                  className="relative w-full focus-within:signal"
+                  ref={locationSearchBarRef}
+               >
+                  <input
+                     value={wantedLocation}
+                     placeholder="Search location"
+                     className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px] text-gray-dark shadow-checkbox"
+                     disabled={true}
+                  ></input>
+                  <div
+                     className="absolute right-[10px] top-[50%] -translate-y-1/2 cursor-pointer"
+                     onClick={() => handleLocationSearch(wantedLocation)}
+                  >
+                     <Place />
+                  </div>
+               </div>
+            </div>
+
+            <div>Ładowanie...</div>
+         </div>
+      );
+
    if (!data) throw new Error();
 
    const filteredData = Array.from(
@@ -62,7 +107,7 @@ export const OfferList = ({}) => {
    ).filter((offer) => offer.title.toLocaleLowerCase().includes(titleParam.toLowerCase()));
 
    return (
-      <div className="w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
+      <div className="min-h-full w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
          <div className="mb-[24px] flex w-full flex-col gap-[12px] md:flex-row">
             <div
                tabIndex={0}

@@ -72,7 +72,7 @@ export const OfferCard = ({
                fill={false}
             />
             <div className="flex flex-col">
-               <h3 className="mb-[8px] text-semibold20 text-gray-darkest">{title}</h3>
+               <h3 className="mb-[8px] text-semibold20 text-gray-darkest md:pr-[75px]">{title}</h3>
                <div className="flex flex-wrap gap-[14px] text-medium12 text-gray-dark">
                   <h4 className="border-r border-gray-light pr-[14px] text-medium12 text-gray-darkest">
                      {companyName}
