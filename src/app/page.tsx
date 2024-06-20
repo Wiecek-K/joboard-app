@@ -9,10 +9,14 @@ async function Page() {
    return (
       <SWRProvider fallback={{ '/joboard/offers': offersData }}>
          <Container>
-            <h1 className="text-semibold28 font-bold">👾 JO–BOARD</h1>
-            <div className="max-w-[800px]">
-               <OfferList />
+            <div className="flex items-center justify-between bg-white p-[16px] pb-[17px] md:flex-col md:items-start md:justify-start md:p-0 md:pt-[40px]">
+               <h1 className="text-semibold28 font-bold md:mb-[40px]">👾 JO–BOARD</h1>
+               <button className="block md:hidden">Filter offers</button>
+               <div className="hidden h-[594px] w-[303px] rounded-[5px] border border-gray-light md:flex">
+                  Filter offers
+               </div>
             </div>
+            <OfferList />
          </Container>
       </SWRProvider>
    );
