@@ -14,7 +14,7 @@ export const OfferCard = ({
    city,
    country,
    seniority,
-   workLocation,
+   jobType,
 }: OfferCardProps) => {
    const formatSalary = (salary: number) => {
       return salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -51,7 +51,7 @@ export const OfferCard = ({
                   </div>
                   <div className="flex">
                      <p className="mr-[14px] border-r border-gray-light pr-[14px]">{seniority}</p>
-                     <p>{workLocation}</p>
+                     <p>{jobType}</p>
                   </div>
                </div>
             </div>
@@ -80,7 +80,7 @@ export const OfferCard = ({
                   <p className="border-r border-gray-light pr-[14px]">
                      {city}, {country}
                   </p>
-                  <p className="border-r border-gray-light pr-[14px]">{workLocation}</p>
+                  <p className="border-r border-gray-light pr-[14px]">{jobType}</p>
                   <p className="border-r border-gray-light pr-[14px]">{seniority}</p>
                   <p className="text-accent">
                      {formatSalary(salaryFrom)} - {formatSalary(salaryTo)} {currency}

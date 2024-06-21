@@ -1,7 +1,8 @@
 import { Container } from '@/ui/components/Container/Container';
-import { OfferList } from '@/ui/components/OfferList';
+import { OfferList } from '@/ui/components/OffersList';
 import { fetchAllOffers } from '@/lib/actions';
 import { SWRProvider } from './swr-provider';
+import { OffersFilter } from '@/ui/components/OffersFilter';
 
 async function Page() {
    const offersData = await fetchAllOffers();
@@ -12,9 +13,7 @@ async function Page() {
             <div className="flex items-center justify-between bg-white p-[16px] pb-[17px] md:flex-col md:items-start md:justify-start md:p-0 md:pt-[40px]">
                <h1 className="text-semibold28 font-bold md:mb-[40px]">👾 JO–BOARD</h1>
                <button className="block md:hidden">Filter offers</button>
-               <div className="hidden h-[594px] w-[303px] rounded-[5px] border border-gray-light md:flex">
-                  Filter offers
-               </div>
+               <OffersFilter />
             </div>
             <OfferList />
          </Container>
