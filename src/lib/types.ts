@@ -18,3 +18,5 @@ export interface JobOfferI {
    updatedAt: string;
    image: string;
 }
+
+export type JobType = "full-time"|"contract"|"part-time"|"freelance"

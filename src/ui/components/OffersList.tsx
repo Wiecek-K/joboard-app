@@ -25,32 +25,112 @@ export const OfferList = ({}) => {
 
    const titleParam = searchParams.get('title') || '';
    const locationParam = searchParams.get('location') || '';
+   const jobTypeParam = searchParams.get('jobType')?.split(',') || '';
+
+   console.log(jobTypeParam);
 
    const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
-         params.set('title', term);
+         params.set('title', term.toLocaleLowerCase());
       } else {
          params.delete('title');
       }
       replace(`${pathname}?${params.toString()}`);
       titleSearchBarRef.current?.blur();
+      setWantedTitle(term);
    }, 350);
 
    const handleLocationSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
       if (term) {
-         params.set('location', term);
+         params.set('location', term.toLocaleLowerCase());
       } else {
          params.delete('location');
       }
       replace(`${pathname}?${params.toString()}`);
       locationSearchBarRef.current?.blur();
+      setWantedLocation(term);
    }, 350);
 
    if (error) return <div>Wystąpił błąd</div>;
-   if (isLoading) return <div>Ładowanie...</div>;
+   if (isLoading)
+      return (
+         <div className="h-min-full w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
+            <div className="mb-[24px] flex w-full flex-col gap-[12px] md:flex-row">
+               <div
+                  tabIndex={0}
+                  className="relative w-full focus-within:signal"
+                  ref={titleSearchBarRef}
+               >
+                  <input
+                     disabled={true}
+                     value={wantedTitle}
+                     placeholder="Search for"
+                     className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px] text-gray-dark shadow-checkbox"
+                  ></input>
+                  <div
+                     className="absolute right-[10px] top-[50%] -translate-y-1/2 cursor-pointer"
+                     onClick={() => handleTitleSearch(wantedTitle)}
+                  >
+                     <Search />
+                  </div>
+               </div>
+               <div
+                  tabIndex={0}
+                  className="relative w-full focus-within:signal"
+                  ref={locationSearchBarRef}
+               >
+                  <input
+                     value={wantedLocation}
+                     placeholder="Search location"
+                     className="flex h-[50px] w-full items-center rounded-[4px] bg-white pl-[24px] pr-[50px] text-gray-dark shadow-checkbox"
+                     disabled={true}
+                  ></input>
+                  <div
+                     className="absolute right-[10px] top-[50%] -translate-y-1/2 cursor-pointer"
+                     onClick={() => handleLocationSearch(wantedLocation)}
+                  >
+                     <Place />
+                  </div>
+               </div>
+            </div>
+
+            <div>Ładowanie...</div>
+         </div>
+      );
+
    if (!data) throw new Error();
+
+   interface filterConditionsI {
+      title?: string;
+      location?: string;
+      jobType?: string[];
+   }
+
+   const filterConditions: filterConditionsI = {};
+
+   if (!!titleParam) filterConditions.title = titleParam;
+   if (!!locationParam) filterConditions.location = locationParam;
+   if (!!jobTypeParam) filterConditions.jobType = jobTypeParam;
+
+   const newFilteredData = data.filter((offer) => {
+      return Object.entries(filterConditions).every(([key, value]) => {
+         if (key === 'title') {
+            return offer.title.toLocaleLowerCase().includes(value);
+         }
+
+         if (key === 'location') {
+            return offer.city.includes(value) || offer.country.includes(value);
+         }
+
+         if (key === 'jobType' && filterConditions.jobType) {
+            return filterConditions.jobType.includes(offer.jobType.toLocaleLowerCase());
+         }
+
+         return false;
+      });
+   });
 
    const filteredData = Array.from(
       new Set([
@@ -62,7 +142,7 @@ export const OfferList = ({}) => {
    ).filter((offer) => offer.title.toLocaleLowerCase().includes(titleParam.toLowerCase()));
 
    return (
-      <div className="w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
+      <div className="min-h-full w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
          <div className="mb-[24px] flex w-full flex-col gap-[12px] md:flex-row">
             <div
                tabIndex={0}
@@ -195,10 +275,12 @@ export const OfferList = ({}) => {
          </div>
 
          <div className="mb-[16px]">
-            <p className="text-semibold16 text-gray-darkest">{filteredData.length} offers found</p>
+            <p className="text-semibold16 text-gray-darkest">
+               {newFilteredData.length} offers found
+            </p>
          </div>
          <div className="ml-[-1px] flex flex-col gap-[8px]">
-            {filteredData.map((offer) => (
+            {newFilteredData.map((offer) => (
                <OfferCard {...offer} key={offer._id} />
             ))}
          </div>

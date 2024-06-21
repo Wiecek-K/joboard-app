@@ -3,8 +3,8 @@ export const ChevronUp = () => (
       <path
          d="M11 16.5L15 13L19 16.5"
          stroke="#545454"
-         stroke-linecap="round"
-         stroke-linejoin="round"
+         strokeLinecap="round"
+         strokeLinejoin="round"
       />
    </svg>
 );
