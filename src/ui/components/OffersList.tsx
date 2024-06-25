@@ -26,8 +26,7 @@ export const OfferList = ({}) => {
    const titleParam = searchParams.get('title') || '';
    const locationParam = searchParams.get('location') || '';
    const jobTypeParam = searchParams.get('jobType')?.split(',') || '';
-
-   console.log(jobTypeParam);
+   const seniorityParam = searchParams.get('seniority')?.split(',') || '';
 
    const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
@@ -106,6 +105,7 @@ export const OfferList = ({}) => {
       title?: string;
       location?: string;
       jobType?: string[];
+      seniority?: string[];
    }
 
    const filterConditions: filterConditionsI = {};
@@ -113,6 +113,7 @@ export const OfferList = ({}) => {
    if (!!titleParam) filterConditions.title = titleParam;
    if (!!locationParam) filterConditions.location = locationParam;
    if (!!jobTypeParam) filterConditions.jobType = jobTypeParam;
+   if (!!seniorityParam) filterConditions.seniority = seniorityParam;
 
    const newFilteredData = data.filter((offer) => {
       return Object.entries(filterConditions).every(([key, value]) => {
@@ -127,7 +128,9 @@ export const OfferList = ({}) => {
          if (key === 'jobType' && filterConditions.jobType) {
             return filterConditions.jobType.includes(offer.jobType.toLocaleLowerCase());
          }
-
+         if (key === 'seniority' && filterConditions.seniority) {
+            return filterConditions.seniority.includes(offer.seniority.toLocaleLowerCase());
+         }
          return false;
       });
    });
