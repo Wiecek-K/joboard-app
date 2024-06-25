@@ -27,6 +27,7 @@ export const OfferList = ({}) => {
    const locationParam = searchParams.get('location') || '';
    const jobTypeParam = searchParams.get('jobType')?.split(',') || '';
    const seniorityParam = searchParams.get('seniority')?.split(',') || '';
+   const workLocationParam = searchParams.get('workLocation')?.split(',') || '';
 
    const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
@@ -106,6 +107,7 @@ export const OfferList = ({}) => {
       location?: string;
       jobType?: string[];
       seniority?: string[];
+      workLocation?: string[];
    }
 
    const filterConditions: filterConditionsI = {};
@@ -114,8 +116,9 @@ export const OfferList = ({}) => {
    if (!!locationParam) filterConditions.location = locationParam;
    if (!!jobTypeParam) filterConditions.jobType = jobTypeParam;
    if (!!seniorityParam) filterConditions.seniority = seniorityParam;
+   if (!!workLocationParam) filterConditions.workLocation = workLocationParam;
 
-   const newFilteredData = data.filter((offer) => {
+   const filteredData = data.filter((offer) => {
       return Object.entries(filterConditions).every(([key, value]) => {
          if (key === 'title') {
             return offer.title.toLocaleLowerCase().includes(value);
@@ -128,21 +131,18 @@ export const OfferList = ({}) => {
          if (key === 'jobType' && filterConditions.jobType) {
             return filterConditions.jobType.includes(offer.jobType.toLocaleLowerCase());
          }
+
          if (key === 'seniority' && filterConditions.seniority) {
             return filterConditions.seniority.includes(offer.seniority.toLocaleLowerCase());
          }
+
+         if (key === 'workLocation' && filterConditions.workLocation) {
+            return filterConditions.workLocation.includes(offer.workLocation.toLocaleLowerCase());
+         }
+
          return false;
       });
    });
-
-   const filteredData = Array.from(
-      new Set([
-         ...data.filter((offer) => offer.city.toLowerCase().includes(locationParam.toLowerCase())),
-         ...data.filter((offer) =>
-            offer.country.toLowerCase().includes(locationParam.toLowerCase()),
-         ),
-      ]),
-   ).filter((offer) => offer.title.toLocaleLowerCase().includes(titleParam.toLowerCase()));
 
    return (
       <div className="min-h-full w-full bg-gray-lightest p-[16px] pl-[15px] md:p-[40px]">
@@ -278,12 +278,10 @@ export const OfferList = ({}) => {
          </div>
 
          <div className="mb-[16px]">
-            <p className="text-semibold16 text-gray-darkest">
-               {newFilteredData.length} offers found
-            </p>
+            <p className="text-semibold16 text-gray-darkest">{filteredData.length} offers found</p>
          </div>
          <div className="ml-[-1px] flex flex-col gap-[8px]">
-            {newFilteredData.map((offer) => (
+            {filteredData.map((offer) => (
                <OfferCard {...offer} key={offer._id} />
             ))}
          </div>
