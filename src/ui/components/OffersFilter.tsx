@@ -2,7 +2,7 @@
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Checkbox } from './Checkbox';
-import type { JobType, Seniority } from '@/lib/types';
+import type { JobTypeT, WorkLocationT, SeniorityT } from '@/lib/types';
 
 function capitalizeFirstLetterAndAfterSlash(str: string) {
    return str.replace(/(\/|^)([a-z])/g, (_, slash, letter) => slash + letter.toUpperCase());
@@ -14,8 +14,8 @@ export const OffersFilter = () => {
    const { replace } = useRouter();
    let params = new URLSearchParams(searchParams);
 
-   const jobTypeFilterOptions: JobType[] = ['full-time', 'contract', 'part-time', 'freelance'];
-   const seniorityFilterOptions: Seniority[] = [
+   const jobTypeFilterOptions: JobTypeT[] = ['full-time', 'contract', 'part-time', 'freelance'];
+   const seniorityFilterOptions: SeniorityT[] = [
       'lead',
       'expert',
       'senior',
@@ -23,38 +23,26 @@ export const OffersFilter = () => {
       'junior',
       'intern',
    ];
+   const locationFilterOptions: WorkLocationT[] = ['remote', 'part-remote', 'on-site'];
 
-   const handleJobTypeChange = (name: JobType, isChecked: boolean) => {
-      let jobTypeArray = params.get('jobType')?.split(',') || [];
-
+   const handleFilterCheckboxChange = (
+      paramName: string,
+      paramValue: string,
+      isChecked: boolean,
+   ) => {
+      let paramArray = params.get(paramName)?.split(',') || [];
       if (isChecked) {
-         jobTypeArray.push(name);
+         paramArray.push(paramValue);
       } else {
-         jobTypeArray = jobTypeArray.filter((type) => type !== name);
+         paramArray = paramArray.filter((type) => type !== paramValue);
       }
 
-      if (jobTypeArray.length === 0) {
-         params.delete('jobType');
+      if (paramArray.length === 0) {
+         params.delete(paramName);
       } else {
-         params.set('jobType', jobTypeArray.join(','));
-      }
-      replace(`${pathname}?${params.toString()}`);
-   };
-
-   const handleSeniorityChange = (name: Seniority, isChecked: boolean) => {
-      let seniorityArray = params.get('seniority')?.split(',') || [];
-
-      if (isChecked) {
-         seniorityArray.push(name);
-      } else {
-         seniorityArray = seniorityArray.filter((type) => type !== name);
+         params.set(paramName, paramArray.join(','));
       }
 
-      if (seniorityArray.length === 0) {
-         params.delete('seniority');
-      } else {
-         params.set('seniority', seniorityArray.join(','));
-      }
       replace(`${pathname}?${params.toString()}`);
    };
 
@@ -76,7 +64,7 @@ export const OffersFilter = () => {
                   <Checkbox
                      name={capitalizeFirstLetterAndAfterSlash(option)}
                      onChange={(e) =>
-                        handleJobTypeChange(e?.target.name as JobType, e?.target.checked || false)
+                        handleFilterCheckboxChange('jobType', option, e?.target.checked || false)
                      }
                      key={option + 'JobTypeCheckbox'}
                      defaultChecked={checkIsChecked('jobType', option)}
@@ -91,13 +79,29 @@ export const OffersFilter = () => {
                   <Checkbox
                      name={capitalizeFirstLetterAndAfterSlash(option)}
                      onChange={(e) =>
-                        handleSeniorityChange(
-                           e?.target.name as Seniority,
-                           e?.target.checked || false,
-                        )
+                        handleFilterCheckboxChange('seniority', option, e?.target.checked || false)
                      }
                      key={option + 'SeniorityCheckbox'}
                      defaultChecked={checkIsChecked('seniority', option)}
+                  />
+               ))}
+            </div>
+         </div>
+         <div className="border-b border-b-gray-light py-[24px]">
+            <p className="mb-[16px] text-semibold12 text-gray-darkest">Location</p>
+            <div className="grid grid-cols-[repeat(auto-fill,_minmax(115px,_1fr))] gap-x-[18px] gap-y-[12px]">
+               {locationFilterOptions.map((option) => (
+                  <Checkbox
+                     name={capitalizeFirstLetterAndAfterSlash(option)}
+                     onChange={(e) =>
+                        handleFilterCheckboxChange(
+                           'workLocation',
+                           option,
+                           e?.target.checked || false,
+                        )
+                     }
+                     key={option + 'WorkLocationCheckbox'}
+                     defaultChecked={checkIsChecked('workLocation', option)}
                   />
                ))}
             </div>
