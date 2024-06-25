@@ -1,23 +1,31 @@
 'use client';
 
-import { JobOfferI } from '@/lib/types';
-
-import { useState, useRef } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-
-import { useDebouncedCallback } from 'use-debounce';
 import { Checkbox } from './Checkbox';
-import type { JobType } from '@/lib/types';
+import type { JobType, Seniority } from '@/lib/types';
+
+function capitalizeFirstLetterAndAfterSlash(str: string) {
+   return str.replace(/(\/|^)([a-z])/g, (_, slash, letter) => slash + letter.toUpperCase());
+}
 
 export const OffersFilter = () => {
    const searchParams = useSearchParams();
    const pathname = usePathname();
    const { replace } = useRouter();
+   let params = new URLSearchParams(searchParams);
+
+   const jobTypeFilterOptions: JobType[] = ['full-time', 'contract', 'part-time', 'freelance'];
+   const seniorityFilterOptions: Seniority[] = [
+      'lead',
+      'expert',
+      'senior',
+      'mid/regular',
+      'junior',
+      'intern',
+   ];
 
    const handleJobTypeChange = (name: JobType, isChecked: boolean) => {
-      const params = new URLSearchParams(searchParams);
       let jobTypeArray = params.get('jobType')?.split(',') || [];
-      console.log(isChecked);
 
       if (isChecked) {
          jobTypeArray.push(name);
@@ -33,9 +41,25 @@ export const OffersFilter = () => {
       replace(`${pathname}?${params.toString()}`);
    };
 
-   const checkIsChecked = (arrayName: string, searchString: string) => {
-      const params = new URLSearchParams(searchParams);
-      const parameter = params.get(arrayName);
+   const handleSeniorityChange = (name: Seniority, isChecked: boolean) => {
+      let seniorityArray = params.get('seniority')?.split(',') || [];
+
+      if (isChecked) {
+         seniorityArray.push(name);
+      } else {
+         seniorityArray = seniorityArray.filter((type) => type !== name);
+      }
+
+      if (seniorityArray.length === 0) {
+         params.delete('seniority');
+      } else {
+         params.set('seniority', seniorityArray.join(','));
+      }
+      replace(`${pathname}?${params.toString()}`);
+   };
+
+   const checkIsChecked = (paramName: string, searchString: string) => {
+      const parameter = params.get(paramName);
 
       if (!parameter) return false;
 
@@ -48,34 +72,34 @@ export const OffersFilter = () => {
          <div className="border-b border-b-gray-light py-[24px]">
             <p className="mb-[16px] text-semibold12 text-gray-darkest">Job type</p>
             <div className="grid grid-cols-[repeat(auto-fill,_minmax(115px,_1fr))] gap-x-[18px] gap-y-[12px]">
-               <Checkbox
-                  name="Full-time"
-                  onChange={(e) =>
-                     handleJobTypeChange(e?.target.name as JobType, e?.target.checked || false)
-                  }
-                  defaultChecked={checkIsChecked('jobType', 'full-time')}
-               ></Checkbox>
-               <Checkbox
-                  name="Contract"
-                  onChange={(e) =>
-                     handleJobTypeChange(e?.target.name as JobType, e?.target.checked || false)
-                  }
-                  defaultChecked={checkIsChecked('jobType', 'contract')}
-               ></Checkbox>
-               <Checkbox
-                  name="Part-time"
-                  onChange={(e) =>
-                     handleJobTypeChange(e?.target.name as JobType, e?.target.checked || false)
-                  }
-                  defaultChecked={checkIsChecked('jobType', 'part-time')}
-               ></Checkbox>
-               <Checkbox
-                  name="Freelance"
-                  onChange={(e) =>
-                     handleJobTypeChange(e?.target.name as JobType, e?.target.checked || false)
-                  }
-                  defaultChecked={checkIsChecked('jobType', 'freelance')}
-               ></Checkbox>
+               {jobTypeFilterOptions.map((option) => (
+                  <Checkbox
+                     name={capitalizeFirstLetterAndAfterSlash(option)}
+                     onChange={(e) =>
+                        handleJobTypeChange(e?.target.name as JobType, e?.target.checked || false)
+                     }
+                     key={option + 'JobTypeCheckbox'}
+                     defaultChecked={checkIsChecked('jobType', option)}
+                  />
+               ))}
+            </div>
+         </div>
+         <div className="border-b border-b-gray-light py-[24px]">
+            <p className="mb-[16px] text-semibold12 text-gray-darkest">Seniority</p>
+            <div className="grid grid-cols-[repeat(auto-fill,_minmax(115px,_1fr))] gap-x-[18px] gap-y-[12px]">
+               {seniorityFilterOptions.map((option) => (
+                  <Checkbox
+                     name={capitalizeFirstLetterAndAfterSlash(option)}
+                     onChange={(e) =>
+                        handleSeniorityChange(
+                           e?.target.name as Seniority,
+                           e?.target.checked || false,
+                        )
+                     }
+                     key={option + 'SeniorityCheckbox'}
+                     defaultChecked={checkIsChecked('seniority', option)}
+                  />
+               ))}
             </div>
          </div>
       </div>

@@ -19,4 +19,6 @@ export interface JobOfferI {
    image: string;
 }
 
-export type JobType = "full-time"|"contract"|"part-time"|"freelance"
+export type JobType = 'full-time' | 'contract' | 'part-time' | 'freelance';
+
+export type Seniority = 'lead' | 'expert' | 'senior' | 'mid/regular' | 'junior' | 'intern';
