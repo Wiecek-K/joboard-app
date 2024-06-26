@@ -3,6 +3,9 @@
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Checkbox } from './Checkbox';
 import type { JobTypeT, WorkLocationT, SeniorityT } from '@/lib/types';
+import { useDebouncedCallback } from 'use-debounce';
+import { useState } from 'react';
+import { InputRange } from './InputRange/InputRange';
 
 function capitalizeFirstLetterAndAfterSlash(str: string) {
    return str.replace(/(\/|^)([a-z])/g, (_, slash, letter) => slash + letter.toUpperCase());
@@ -13,6 +16,8 @@ export const OffersFilter = () => {
    const pathname = usePathname();
    const { replace } = useRouter();
    let params = new URLSearchParams(searchParams);
+
+   const [salaryMin, setSalaryMin] = useState(parseInt(params.get('salaryMin') || '14000'));
 
    const jobTypeFilterOptions: JobTypeT[] = ['full-time', 'contract', 'part-time', 'freelance'];
    const seniorityFilterOptions: SeniorityT[] = [
@@ -46,6 +51,16 @@ export const OffersFilter = () => {
       replace(`${pathname}?${params.toString()}`);
    };
 
+   const handleSalaryInputChange = useDebouncedCallback((newValue: number) => {
+      if (newValue == 0) {
+         params.delete('salaryMin');
+      } else {
+         params.set('salaryMin', newValue.toString());
+      }
+
+      replace(`${pathname}?${params.toString()}`);
+   }, 300);
+
    const checkIsChecked = (paramName: string, searchString: string) => {
       const parameter = params.get(paramName);
 
@@ -55,8 +70,8 @@ export const OffersFilter = () => {
    };
 
    return (
-      <div className="hidden h-[594px] w-[303px] rounded-[5px] border border-gray-light p-[24px] md:flex md:flex-col">
-         <div className="border-b border-b-gray-light pb-[24px]">Filter offers</div>
+      <div className="hidden w-[303px] rounded-[5px] border border-gray-light p-[24px] md:flex md:flex-col">
+         <div className="border-b border-b-gray-light pb-[24px] text-semibold16">Filter offers</div>
          <div className="border-b border-b-gray-light py-[24px]">
             <p className="mb-[16px] text-semibold12 text-gray-darkest">Job type</p>
             <div className="grid grid-cols-[repeat(auto-fill,_minmax(115px,_1fr))] gap-x-[18px] gap-y-[12px]">
@@ -105,6 +120,19 @@ export const OffersFilter = () => {
                   />
                ))}
             </div>
+         </div>
+         <div className="pt-[24px]">
+            <p className="mb-[16px] text-semibold12 text-gray-darkest">{`Salary (min.)`}</p>
+            <InputRange
+               max={100000}
+               min={0}
+               onChange={(e) => {
+                  setSalaryMin(parseInt(e.target.value));
+                  handleSalaryInputChange(parseInt(e.target.value));
+               }}
+               step={500}
+               value={salaryMin}
+            />
          </div>
       </div>
    );

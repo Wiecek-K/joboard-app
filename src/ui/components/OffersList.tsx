@@ -13,9 +13,6 @@ import { useDebouncedCallback } from 'use-debounce';
 export const OfferList = ({}) => {
    const { data, error, isLoading } = useSWR<JobOfferI[]>('/joboard/offers', fetchAllOffers);
 
-   const [wantedTitle, setWantedTitle] = useState('');
-   const [wantedLocation, setWantedLocation] = useState('');
-
    const titleSearchBarRef = useRef<HTMLDivElement>(null);
    const locationSearchBarRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +25,11 @@ export const OfferList = ({}) => {
    const jobTypeParam = searchParams.get('jobType')?.split(',') || '';
    const seniorityParam = searchParams.get('seniority')?.split(',') || '';
    const workLocationParam = searchParams.get('workLocation')?.split(',') || '';
+   const salaryMinParam = parseInt(searchParams.get('salaryMin') || '14000');
+
+   const [wantedTitle, setWantedTitle] = useState(titleParam);
+   const [wantedLocation, setWantedLocation] = useState(locationParam);
+
 
    const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
@@ -108,6 +110,7 @@ export const OfferList = ({}) => {
       jobType?: string[];
       seniority?: string[];
       workLocation?: string[];
+      salaryMin?: number;
    }
 
    const filterConditions: filterConditionsI = {};
@@ -117,6 +120,7 @@ export const OfferList = ({}) => {
    if (!!jobTypeParam) filterConditions.jobType = jobTypeParam;
    if (!!seniorityParam) filterConditions.seniority = seniorityParam;
    if (!!workLocationParam) filterConditions.workLocation = workLocationParam;
+   if (!!salaryMinParam) filterConditions.salaryMin = salaryMinParam;
 
    const filteredData = data.filter((offer) => {
       return Object.entries(filterConditions).every(([key, value]) => {
@@ -138,6 +142,10 @@ export const OfferList = ({}) => {
 
          if (key === 'workLocation' && filterConditions.workLocation) {
             return filterConditions.workLocation.includes(offer.workLocation.toLocaleLowerCase());
+         }
+
+         if (key === 'salaryMin' && filterConditions.salaryMin) {
+            return offer.salaryTo >= value;
          }
 
          return false;
