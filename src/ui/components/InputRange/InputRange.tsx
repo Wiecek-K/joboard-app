@@ -10,11 +10,13 @@ interface InputRangeProps {
 }
 
 export const InputRange = ({ min, max, value, step, onChange }: InputRangeProps) => {
+   const inputRef = useRef<HTMLInputElement>(null);
    const inputValueRef = useRef<HTMLInputElement>(null);
 
    useEffect(() => {
-      if (inputValueRef.current) {
-         inputValueRef.current.style.left = (value / max) * 100 + '%';
+      if (inputValueRef.current && inputRef.current) {
+         inputValueRef.current.style.left =
+            (value / max) * (inputRef.current.offsetWidth - 19) + 9.5 + 'px';
       }
    }, [value, max]);
 
@@ -30,6 +32,7 @@ export const InputRange = ({ min, max, value, step, onChange }: InputRangeProps)
                onChange(e);
             }}
             className={styles.slider}
+            ref={inputRef}
          />
 
          <span ref={inputValueRef} className={`text-medium14 text-gray-dark ${styles.value}`}>
