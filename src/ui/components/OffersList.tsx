@@ -4,13 +4,13 @@ import { JobOfferI } from '@/lib/types';
 import { OfferCard } from './OfferCard';
 import useSWR from 'swr';
 import { fetchAllOffers } from '@/lib/actions';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Search } from '@/assets/icons/Search';
 import { Place } from '@/assets/icons/Place';
 import { useDebouncedCallback } from 'use-debounce';
 
-export const OfferList = ({}) => {
+export const OffersList = () => {
    const { data, error, isLoading } = useSWR<JobOfferI[]>('/joboard/offers', fetchAllOffers);
 
    const titleSearchBarRef = useRef<HTMLDivElement>(null);
@@ -29,7 +29,6 @@ export const OfferList = ({}) => {
 
    const [wantedTitle, setWantedTitle] = useState(titleParam);
    const [wantedLocation, setWantedLocation] = useState(locationParam);
-
 
    const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
@@ -129,7 +128,10 @@ export const OfferList = ({}) => {
          }
 
          if (key === 'location') {
-            return offer.city.includes(value) || offer.country.includes(value);
+            return (
+               offer.city.toLocaleLowerCase().includes(value) ||
+               offer.country.toLocaleLowerCase().includes(value)
+            );
          }
 
          if (key === 'jobType' && filterConditions.jobType) {

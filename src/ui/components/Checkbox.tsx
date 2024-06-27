@@ -1,18 +1,13 @@
-import { ReactNode } from 'react';
 import { CheckboxMark } from '@/assets/icons/CheckboxMark';
-import clsx from 'clsx';
-import { ChangeEvent, MouseEvent } from 'react';
 
 interface CheckboxProps {
-   name: string;
-   defaultChecked?: boolean;
-   children?: ReactNode;
-   onChange?: (e?: ChangeEvent<HTMLInputElement>) => void;
-   onClick?: (e?: MouseEvent<HTMLInputElement>) => void;
+   label: string;
+   checked: boolean;
+   onChange?: () => void;
 }
 
-export const Checkbox = ({ name, children, onChange, defaultChecked = false }: CheckboxProps) => {
-   const id = name.toLowerCase();
+export const Checkbox = ({ label, onChange, checked }: CheckboxProps) => {
+   const id = label.toLowerCase();
    return (
       <div className="relative has-[:is(input:checked)]:signal">
          <input
@@ -20,8 +15,8 @@ export const Checkbox = ({ name, children, onChange, defaultChecked = false }: C
             id={id}
             className="absolute hidden"
             onChange={onChange}
-            defaultChecked={defaultChecked}
-            name={name.toLocaleLowerCase()}
+            checked={checked}
+            name={label.toLocaleLowerCase()}
          />
          <label
             htmlFor={id}
@@ -32,7 +27,7 @@ export const Checkbox = ({ name, children, onChange, defaultChecked = false }: C
                   <CheckboxMark />
                </div>
             </div>
-            {name}
+            {label}
          </label>
       </div>
    );
