@@ -1,5 +1,5 @@
 import { Container } from '@/ui/components/Container/Container';
-import { OfferList } from '@/ui/components/OffersList';
+import { OffersList } from '@/ui/components/OffersList';
 import { fetchAllOffers } from '@/lib/actions';
 import { SWRProvider } from './swr-provider';
 import { OffersFilter } from '@/ui/components/OffersFilter';
@@ -15,7 +15,7 @@ async function Page() {
                <button className="block md:hidden">Filter offers</button>
                <OffersFilter />
             </div>
-            <OfferList />
+            <OffersList />
          </Container>
       </SWRProvider>
    );
