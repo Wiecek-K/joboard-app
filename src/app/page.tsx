@@ -7,7 +7,6 @@ import { OffersFilter } from '@/ui/components/OffersFilter';
 async function Page() {
    const offersData = await fetchAllOffers();
 
-
    return (
       <SWRProvider fallback={{ '/joboard/offers': offersData }}>
          <Container>

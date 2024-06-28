@@ -27,8 +27,13 @@ export const OffersList = () => {
    const workLocationParam = searchParams.get('workLocation')?.split(',') || '';
    const salaryMinParam = parseInt(searchParams.get('salaryMin') || '14000');
 
-   const [wantedTitle, setWantedTitle] = useState(titleParam);
-   const [wantedLocation, setWantedLocation] = useState(locationParam);
+   const [wantedTitle, setWantedTitle] = useState('');
+   const [wantedLocation, setWantedLocation] = useState('');
+
+   useEffect(() => {
+      setWantedTitle(titleParam);
+      setWantedLocation(locationParam);
+   }, [titleParam, locationParam]);
 
    const handleTitleSearch = useDebouncedCallback((term: string) => {
       const params = new URLSearchParams(searchParams);
