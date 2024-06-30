@@ -21,23 +21,25 @@ export const OffersFilter = () => {
 
    let params = new URLSearchParams(searchParams);
 
-   const [salaryMin, setSalaryMin] = useState(
-      parseInt(params.get('salaryMin') || DEFAULT_SALARY_MIN.toString()),
-   );
+   const workLocationFromUrl = params.get('workLocation');
+   const seniorityFromUrl = params.get('seniority');
+   const jobTypeFromUrl = params.get('jobType');
+   const salaryMinFromUrl = params.get('salaryMin');
+
+   const [salaryMin, setSalaryMin] = useState<number>();
    const [selectedJobType, setSelectedJobType] = useState<string[]>([]);
    const [selectedWorkLocation, setSelectedWorkLocation] = useState<string[]>([]);
 
    const [selectedSeniority, setSelectedSeniority] = useState<string[]>([]);
 
    useEffect(() => {
-      const workLocationFromUrl = params.get('workLocation') || '';
-      const seniorityFromUrl = params.get('seniority') || '';
-      const jobTypeFromUrl = params.get('jobType') || '';
-
-      setSelectedWorkLocation(workLocationFromUrl.split(','));
-      setSelectedSeniority(seniorityFromUrl.split(','));
-      setSelectedJobType(jobTypeFromUrl.split(','));
-   }, []);
+      setSelectedWorkLocation(workLocationFromUrl?.split(',') || []);
+      setSelectedSeniority(seniorityFromUrl?.split(',') || []);
+      setSelectedJobType(jobTypeFromUrl?.split(',') || []);
+      salaryMinFromUrl
+         ? setSalaryMin(parseInt(salaryMinFromUrl))
+         : setSalaryMin(DEFAULT_SALARY_MIN);
+   }, [workLocationFromUrl, seniorityFromUrl, jobTypeFromUrl, salaryMinFromUrl]);
 
    const jobTypeFilterOptions: JobTypeT[] = ['full-time', 'contract', 'part-time', 'freelance'];
    const seniorityFilterOptions: SeniorityT[] = [
@@ -61,8 +63,6 @@ export const OffersFilter = () => {
    }, 300);
 
    const onFiltersChange = useDebouncedCallback(() => {
-      let params = new URLSearchParams(searchParams);
-
       !selectedJobType.length
          ? params.delete('jobType')
          : params.set('jobType', selectedJobType.join(','));
@@ -78,10 +78,6 @@ export const OffersFilter = () => {
 
    const handleClearFilters = () => {
       params = new URLSearchParams();
-      setSelectedJobType([]);
-      setSelectedSeniority([]);
-      setSelectedWorkLocation([]);
-      setSalaryMin(DEFAULT_SALARY_MIN);
       replace(`${pathname}?`);
    };
 
@@ -166,7 +162,7 @@ export const OffersFilter = () => {
                   handleSalaryInputChange(parseInt(e.target.value));
                }}
                step={500}
-               value={salaryMin}
+               value={salaryMin || DEFAULT_SALARY_MIN}
             />
          </div>
       </div>
