@@ -44,7 +44,6 @@ export const OffersList = () => {
       }
       replace(`${pathname}?${params.toString()}`);
       titleSearchBarRef.current?.blur();
-      setWantedTitle(term);
    }, 350);
 
    const handleLocationSearch = useDebouncedCallback((term: string) => {
@@ -56,8 +55,14 @@ export const OffersList = () => {
       }
       replace(`${pathname}?${params.toString()}`);
       locationSearchBarRef.current?.blur();
-      setWantedLocation(term);
    }, 350);
+
+   const handleClearSearch = () => {
+      const params = new URLSearchParams(searchParams);
+      params.delete('location');
+      params.delete('title');
+      replace(`${pathname}?${params.toString()}`);
+   };
 
    if (error) return <div>Wystąpił błąd</div>;
    if (isLoading)
@@ -293,7 +298,15 @@ export const OffersList = () => {
          </div>
 
          <div className="mb-[16px]">
-            <p className="text-semibold16 text-gray-darkest">{filteredData.length} offers found</p>
+            <span className="mr-[16px] text-semibold16 text-gray-darkest">{`${filteredData.length} offers found ${titleParam ? 'for "' + titleParam + '" ' : ''}${locationParam ? 'for "' + locationParam + '" ' : ''}`}</span>
+            {titleParam || locationParam ? (
+               <button
+                  className="bg-transparent py-[10px] pl-0 pr-[17px] text-medium12 text-accent-strong"
+                  onClick={handleClearSearch}
+               >
+                  Clear search
+               </button>
+            ) : null}
          </div>
          <div className="ml-[-1px] flex flex-col gap-[8px]">
             {filteredData.map((offer) => (
