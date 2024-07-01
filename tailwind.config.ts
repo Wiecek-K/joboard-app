@@ -41,6 +41,7 @@ const config: Config = {
             semibold20: ['20px', { lineHeight: '26px', fontWeight: '600', letterSpacing: '-2%' }],
             semibold24: ['24px', { lineHeight: '100%', fontWeight: '600' }],
             semibold28: ['28px', { lineHeight: '100%', fontWeight: '600' }],
+            logo: ['27px', { fontWeight: '700', letterSpacing: '-7%', lineHeight: '100%' }],
          },
          boxShadow: {
             checkbox: '0px 0px 4px 0px hsla(266, 57%, 61%, 0.4)',

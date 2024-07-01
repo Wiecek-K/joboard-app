@@ -100,7 +100,7 @@ export const OffersFilter = () => {
    };
 
    return (
-      <div className="hidden w-[303px] rounded-[5px] border border-gray-light p-[24px] md:flex md:flex-col">
+      <div className="w-[303px] rounded-[5px] border border-gray-light p-[24px] md:flex md:flex-col">
          <div className="flex items-center justify-between border-b border-b-gray-light pb-[16px] text-semibold16">
             <p>Filter offers</p> <ClearFiltersBtn onClick={handleClearFilters} />
          </div>
