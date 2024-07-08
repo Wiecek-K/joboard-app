@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { JobOfferI } from '@/lib/types';
+import { fetchJobOfferDetails } from '@/lib/actions';
 
 interface OfferCardProps extends JobOfferI {}
 
@@ -15,6 +16,7 @@ export const OfferCard = ({
    country,
    seniority,
    jobType,
+   _id,
 }: OfferCardProps) => {
    const formatSalary = (salary: number) => {
       return salary.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -29,7 +31,7 @@ export const OfferCard = ({
    }
 
    return (
-      <>
+      <div onClick={() => fetchJobOfferDetails(_id)}>
          <div className="flex w-full flex-col rounded-[5px] border border-gray-light bg-white p-[24px] md:hidden">
             <h3 className="mb-[16px] pr-[6px] text-semibold20 text-gray-darkest">{title}</h3>
             <div className="mb-[24px] flex">
@@ -91,6 +93,6 @@ export const OfferCard = ({
                </p>
             </div>
          </div>
-      </>
+      </div>
    );
 };
