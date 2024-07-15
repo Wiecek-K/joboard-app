@@ -17,7 +17,7 @@ export default function RootLayout({
          <body
             className={`${poppins.className} block min-h-screen bg-white bg-gradient-to-b text-gray-darkest antialiased`}
          >
-            {children}
+            <main id="root">{children}</main>
          </body>
       </html>
    );
