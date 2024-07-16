@@ -9,8 +9,6 @@ import grid from './OfferDetailsModal.module.css';
 import clsx from 'clsx';
 import { calculateDaysElapsed, formatSalary } from '@/lib/utils';
 import { Close } from '@/assets/icons/Close';
-import { Search } from '@/assets/icons/Search';
-import { CheckboxMark } from '@/assets/icons/CheckboxMark';
 
 interface OfferDetailsModalProps {
    setShowModal: (newState: boolean) => void;
